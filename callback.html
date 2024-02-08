@@ -1,19 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Top Artist Results</title>
+    <title>Callback Page</title>
 </head>
 <body>
-    <h1>Top Artist Results</h1>
-    <div id="topArtist"></div>
+    <h1>Callback Page</h1>
+    <p>Redirecting...</p>
 
     <script>
-        // Get top artist name from URL query parameter
-        const urlParams = new URLSearchParams(window.location.search);
-        const topArtistName = urlParams.get('artist');
+        // Extract access token from URL hash
+        const accessToken = window.location.hash.substr(1).split('&')[0].split('=')[1];
 
-        // Display top artist name
-        document.getElementById('topArtist').innerText = `Your top artist of the month is: ${topArtistName}`;
+        // Redirect to results page with access token
+        window.location.href = `results.html#access_token=${accessToken}`;
     </script>
 </body>
 </html>
