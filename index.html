@@ -1,92 +1,24 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <title>Top Artist of the Month</title>
-</head>
-<body>
-    <h1>Top Artist of the Month</h1>
-    <div id="topArtist"></div>
+2<html lang="en">
+3    <head>
+4        <meta charset="utf-8">
+5        <title>My Spotify Profile</title>
+6        <script src="src/script.js" type="module"></script>
+7    </head>
+8    <body>
+9        <h1>Display your Spotify profile data</h1>
 
-    <script>
-        // Replace these values with your actual Spotify API credentials
-        const clientId = '1a56f0ddf7e04b659519f1fcc5f622f8';
-        const clientSecret = 'e7866a85962a4fe89139d92bfd0cb6efT';
+<section id="profile">
+<h2>Logged in as <span id="displayName"></span></h2>
+<span id="avatar"></span>
+<ul>
+    <li>User ID: <span id="id"></span></li>
+    <li>Email: <span id="email"></span></li>
+    <li>Spotify URI: <a id="uri" href="#"></a></li>
+    <li>Link: <a id="url" href="#"></a></li>
+    <li>Profile Image: <span id="imgUrl"></span></li>
+</ul>
+</section>
 
-        // Redirect URI for local testing
-        const redirectUri = 'https://cjhedges93.github.io/miccheck/callback.html'; // Change this to your desired redirect URI
-
-        // Spotify API endpoints
-        const authEndpoint = 'https://accounts.spotify.com/authorize';
-        const tokenEndpoint = 'https://accounts.spotify.com/api/token';
-        const topArtistsEndpoint = 'https://api.spotify.com/v1/me/top/artists';
-
-        // Scope for accessing user's top artists
-        const scope = 'user-top-read';
-
-        // Authenticate user and get access token
-        function authenticate() {
-            const params = new URLSearchParams({
-                client_id: clientId,
-                redirect_uri: redirectUri,
-                scope: scope,
-                response_type: 'token'
-            });
-
-            window.location.href = `${authEndpoint}?${params}`;
-        }
-
-        // Get access token from URL hash
-        function getAccessTokenFromHash() {
-            const hashParams = window.location.hash.substr(1).split('&');
-            for (let param of hashParams) {
-                const [key, value] = param.split('=');
-                if (key === 'access_token') {
-                    return value;
-                }
-            }
-            return null;
-        }
-
-        // Get user's top artists
-        async function getTopArtists(accessToken) {
-            const response = await fetch(`${topArtistsEndpoint}?time_range=short_term`, {
-                headers: {
-                    'Authorization': `Bearer ${accessToken}`
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error(`Failed to fetch top artists: ${response.status} ${response.statusText}`);
-            }
-
-            const data = await response.json();
-            return data.items;
-        }
-
-        // Main function to retrieve top artist and redirect to results page
-        async function redirectToResults() {
-            const accessToken = getAccessTokenFromHash();
-            if (accessToken) {
-                try {
-                    const topArtists = await getTopArtists(accessToken);
-                    // Redirect to results page with top artists data
-                    // For simplicity, let's just log the top artists names
-                    console.log("Top Artists:", topArtists.map(artist => artist.name));
-                } catch (error) {
-                    console.error('Failed to fetch top artists:', error);
-                }
-            } else {
-                // Handle missing access token
-                console.error('Access token not found in URL hash');
-            }
-        }
-
-        // Check if access token is present in URL hash
-        if (window.location.hash) {
-            redirectToResults();
-        } else {
-            authenticate();
-        }
-    </script>
-</body>
-</html>
+10    </body>
+11</html>
