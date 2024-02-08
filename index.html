@@ -10,10 +10,10 @@
     <script>
         // Replace these values with your actual Spotify API credentials
         const clientId = '1a56f0ddf7e04b659519f1fcc5f622f8';
-        const clientSecret = 'e7866a85962a4fe89139d92bfd0cb6ef';
+        const clientSecret = 'e7866a85962a4fe89139d92bfd0cb6efT';
 
-        // Redirect URI specified in your Spotify Developer Dashboard
-        const redirectUri = 'http://localhost/8080/callback';
+        // Redirect URI for local testing
+        const redirectUri = 'https://cjhedges93.github.io/miccheck/results.html'; // Change this to your desired redirect URI
 
         // Spotify API endpoints
         const authEndpoint = 'https://accounts.spotify.com/authorize';
@@ -46,16 +46,17 @@
             return data.items[0]; // Assuming the first item is the top artist
         }
 
-        // Main function to retrieve top artist and display it
-        async function displayTopArtist() {
+        // Main function to retrieve top artist and redirect to results page
+        async function redirectToResults() {
             const accessToken = window.location.hash.substr(1).split('&')[0].split('=')[1]; // Extract access token from URL
             const topArtist = await getTopArtist(accessToken);
-            document.getElementById('topArtist').innerText = `Your top artist of the month is: ${topArtist.name}`;
+            // Redirect to results page with top artist data
+            window.location.href = `results.html?artist=${encodeURIComponent(topArtist.name)}`;
         }
 
         // Check if access token is present in URL hash
         if (window.location.hash) {
-            displayTopArtist();
+            redirectToResults();
         } else {
             authenticate();
         }
