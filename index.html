@@ -35,6 +35,18 @@
             window.location.href = `${authEndpoint}?${params}`;
         }
 
+        // Get access token from URL hash
+        function getAccessTokenFromHash() {
+            const hashParams = window.location.hash.substr(1).split('&');
+            for (let param of hashParams) {
+                const [key, value] = param.split('=');
+                if (key === 'access_token') {
+                    return value;
+                }
+            }
+            return null;
+        }
+
         // Get user's top artist
         async function getTopArtist(accessToken) {
             const response = await fetch(`${topArtistsEndpoint}?time_range=short_term`, {
@@ -48,10 +60,15 @@
 
         // Main function to retrieve top artist and redirect to results page
         async function redirectToResults() {
-            const accessToken = window.location.hash.substr(1).split('&')[0].split('=')[1]; // Extract access token from URL
-            const topArtist = await getTopArtist(accessToken);
-            // Redirect to results page with top artist data
-            window.location.href = `results.html?artist=${encodeURIComponent(topArtist.name)}`;
+            const accessToken = getAccessTokenFromHash();
+            if (accessToken) {
+                const topArtist = await getTopArtist(accessToken);
+                // Redirect to results page with top artist data
+                window.location.href = `results.html?artist=${encodeURIComponent(topArtist.name)}`;
+            } else {
+                // Handle missing access token
+                console.error('Access token not found in URL hash');
+            }
         }
 
         // Check if access token is present in URL hash
