@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Top Artist Results</title>
+</head>
+<body>
+    <h1>Top Artist Results</h1>
+    <div id="topArtist"></div>
+
+    <script>
+        // Get top artist name from URL query parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const topArtistName = urlParams.get('artist');
+
+        // Display top artist name
+        document.getElementById('topArtist').innerText = `Your top artist of the month is: ${topArtistName}`;
+    </script>
+</body>
+</html>
