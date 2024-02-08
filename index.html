@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Top Artist of the Month</title>
+</head>
+<body>
+    <h1>Top Artist of the Month</h1>
+    <div id="topArtist"></div>
+
+    <script>
+        // Replace these values with your actual Spotify API credentials
+        const clientId = '1a56f0ddf7e04b659519f1fcc5f622f8';
+        const clientSecret = 'e7866a85962a4fe89139d92bfd0cb6ef';
+
+        // Redirect URI specified in your Spotify Developer Dashboard
+        const redirectUri = 'http://localhost/8080/callback';
+
+        // Spotify API endpoints
+        const authEndpoint = 'https://accounts.spotify.com/authorize';
+        const tokenEndpoint = 'https://accounts.spotify.com/api/token';
+        const topArtistsEndpoint = 'https://api.spotify.com/v1/me/top/artists';
+
+        // Scope for accessing user's top artists
+        const scope = 'user-top-read';
+
+        // Authenticate user and get access token
+        function authenticate() {
+            const params = new URLSearchParams({
+                client_id: clientId,
+                redirect_uri: redirectUri,
+                scope: scope,
+                response_type: 'token'
+            });
+
+            window.location.href = `${authEndpoint}?${params}`;
+        }
+
+        // Get user's top artist
+        async function getTopArtist(accessToken) {
+            const response = await fetch(`${topArtistsEndpoint}?time_range=short_term`, {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            });
+            const data = await response.json();
+            return data.items[0]; // Assuming the first item is the top artist
+        }
+
+        // Main function to retrieve top artist and display it
+        async function displayTopArtist() {
+            const accessToken = window.location.hash.substr(1).split('&')[0].split('=')[1]; // Extract access token from URL
+            const topArtist = await getTopArtist(accessToken);
+            document.getElementById('topArtist').innerText = `Your top artist of the month is: ${topArtist.name}`;
+        }
+
+        // Check if access token is present in URL hash
+        if (window.location.hash) {
+            displayTopArtist();
+        } else {
+            authenticate();
+        }
+    </script>
+</body>
+</html>
