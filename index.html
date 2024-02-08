@@ -47,24 +47,34 @@
             return null;
         }
 
-        // Get user's top artist
-        async function getTopArtist(accessToken) {
+        // Get user's top artists
+        async function getTopArtists(accessToken) {
             const response = await fetch(`${topArtistsEndpoint}?time_range=short_term`, {
                 headers: {
                     'Authorization': `Bearer ${accessToken}`
                 }
             });
+
+            if (!response.ok) {
+                throw new Error(`Failed to fetch top artists: ${response.status} ${response.statusText}`);
+            }
+
             const data = await response.json();
-            return data.items[0]; // Assuming the first item is the top artist
+            return data.items;
         }
 
         // Main function to retrieve top artist and redirect to results page
         async function redirectToResults() {
             const accessToken = getAccessTokenFromHash();
             if (accessToken) {
-                const topArtist = await getTopArtist(accessToken);
-                // Redirect to results page with top artist data
-                window.location.href = `results.html?artist=${encodeURIComponent(topArtist.name)}`;
+                try {
+                    const topArtists = await getTopArtists(accessToken);
+                    // Redirect to results page with top artists data
+                    // For simplicity, let's just log the top artists names
+                    console.log("Top Artists:", topArtists.map(artist => artist.name));
+                } catch (error) {
+                    console.error('Failed to fetch top artists:', error);
+                }
             } else {
                 // Handle missing access token
                 console.error('Access token not found in URL hash');
