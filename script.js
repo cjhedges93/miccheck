@@ -11,7 +11,7 @@ if (!code) {
 }
 
 
-async function redirectToAuthCodeFlow(clientId) {
+
     export async function redirectToAuthCodeFlow(clientId) {
     const verifier = generateCodeVerifier(128);
     const challenge = await generateCodeChallenge(verifier);
@@ -48,7 +48,6 @@ async function generateCodeChallenge(codeVerifier) {
         .replace(/=+$/, '');
 }
 
-}
 
 export async function getAccessToken(clientId, code) {
     const verifier = localStorage.getItem("verifier");
