@@ -1,4 +1,4 @@
-const clientId = "1a56f0ddf7e04b659519f1fcc5f622f8"; // Replace with your client ID
+const clientId = "1a56f0ddf7e04b659519f1fcc5f622f8";
 const params = new URLSearchParams(window.location.search);
 const code = params.get("code");
 
@@ -11,7 +11,8 @@ if (!code) {
 }
 
 
-export async function redirectToAuthCodeFlow(clientId) {
+async function redirectToAuthCodeFlow(clientId) {
+    export async function redirectToAuthCodeFlow(clientId) {
     const verifier = generateCodeVerifier(128);
     const challenge = await generateCodeChallenge(verifier);
 
@@ -20,7 +21,7 @@ export async function redirectToAuthCodeFlow(clientId) {
     const params = new URLSearchParams();
     params.append("client_id", clientId);
     params.append("response_type", "code");
-    params.append("redirect_uri", "https://cjhedges93.github.io/miccheck/callback");
+    params.append("redirect_uri", "https://cjhedges93.github.io/miccheck/callback.html");
     params.append("scope", "user-read-private user-read-email");
     params.append("code_challenge_method", "S256");
     params.append("code_challenge", challenge);
@@ -47,6 +48,7 @@ async function generateCodeChallenge(codeVerifier) {
         .replace(/=+$/, '');
 }
 
+}
 
 export async function getAccessToken(clientId, code) {
     const verifier = localStorage.getItem("verifier");
@@ -55,7 +57,7 @@ export async function getAccessToken(clientId, code) {
     params.append("client_id", clientId);
     params.append("grant_type", "authorization_code");
     params.append("code", code);
-    params.append("redirect_uri", "https://cjhedges93.github.io/miccheck/callback");
+    params.append("redirect_uri", "https://cjhedges93.github.io/miccheck/callback.html");
     params.append("code_verifier", verifier);
 
     const result = await fetch("https://accounts.spotify.com/api/token", {
@@ -67,8 +69,10 @@ export async function getAccessToken(clientId, code) {
     const { access_token } = await result.json();
     return access_token;
 }
+}
 
 async function fetchProfile(token) {
+    async function fetchProfile(token) {
     const result = await fetch("https://api.spotify.com/v1/me", {
         method: "GET", headers: { Authorization: `Bearer ${token}` }
     });
@@ -95,4 +99,5 @@ function populateUI(profile) {
     document.getElementById("uri").setAttribute("href", profile.external_urls.spotify);
     document.getElementById("url").innerText = profile.href;
     document.getElementById("url").setAttribute("href", profile.href);
+}
 }
